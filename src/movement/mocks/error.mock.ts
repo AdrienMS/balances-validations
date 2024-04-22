@@ -35,3 +35,8 @@ export const badRequestMessages = [
   'balances must contain at least 2 elements',
   'balances must be an array',
 ];
+
+export const unknowError = {
+  message: "I'm a teapot",
+  reasons: [{ reason: 'Unknow error' }],
+};

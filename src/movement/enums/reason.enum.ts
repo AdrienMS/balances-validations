@@ -5,4 +5,5 @@ export enum EReason {
   MOVEMENT_RANGE = 'Movements out of range',
   MOVEMENT_MISSING = 'Missing movements',
   MOVEMENT_EXCESS = 'Excess movements',
+  UNKNOW_ERROR = 'Unknow error',
 }

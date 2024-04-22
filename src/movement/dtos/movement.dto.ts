@@ -1,17 +1,25 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 import { Type } from 'class-transformer';
 import { IsDate, IsNumber, IsString } from 'class-validator';
 
-export class MovementDto {
-  @IsNumber()
-  id: number;
+import { Movement } from '../models';
 
+export class MovementDto implements Movement {
+  @ApiProperty()
+  @IsNumber()
+  readonly id: number;
+
+  @ApiProperty()
   @Type(() => Date)
   @IsDate()
-  date: Date;
+  readonly date: Date;
 
+  @ApiProperty()
   @IsString()
-  wording: string;
+  readonly wording: string;
 
+  @ApiProperty()
   @IsNumber()
-  amount: number;
+  readonly amount: number;
 }

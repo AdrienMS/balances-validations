@@ -4,6 +4,14 @@ import { EReason } from '../enums';
 
 @Injectable()
 export class MovementService {
+  /**
+   * Validates movements against balances and returns a list of reasons for any errors.
+   *
+   * @param {Movement[]} movements - The list of movements to validate.
+   * @param {Balance[]} balances - The list of balances to use for validation.
+   *
+   * @returns {Reason[]} An array of `Reason` indicating any validation errors.
+   */
   public validation(movements: Movement[], balances: Balance[]): Reason[] {
     const errors: Reason[] = [];
     balances = this._sortBalances(balances);
@@ -17,10 +25,31 @@ export class MovementService {
     return errors;
   }
 
+  /**
+   * Sorts the given list of balances by date.
+   *
+   * @param {Balance[]} balances - The list of balances to sort.
+   *
+   * @returns {Balance[]} The sorted list of balances.
+   * @private
+   */
   private _sortBalances(balances: Balance[]) {
     return balances.sort((b1, b2) => b1.date.getTime() - b2.date.getTime());
   }
 
+  /**
+   * Calculates the date range between consecutive balances.
+   *
+   * This method calculates the date range between consecutive balances
+   * in the provided list. It returns an array of tuples, each containing
+   * the start and end dates of a date range.
+   *
+   * @param {Balance[]} balances - The list of balances to calculate the date range from.
+   *
+   * @returns {Array<[Date, Date]>} An array of tuples representing the start and end dates of each date range.
+   *
+   * @private
+   */
   private _dateRange(balances: Balance[]): Array<[Date, Date]> {
     const dateRange: Array<[Date, Date]> = [];
     for (let i = 0; i < balances.length; i += 1) {
@@ -31,6 +60,19 @@ export class MovementService {
     return dateRange;
   }
 
+  /**
+   * Calculates the differences between consecutive balances.
+   *
+   * This method calculates the differences between consecutive balances
+   * in the provided list. It returns an array of differences, where each
+   * element represents the difference between two consecutive balances.
+   *
+   * @param {Balance[]} balances - The list of balances to calculate the differences from.
+   *
+   * @returns {Array<number>} An array of numbers representing the differences between consecutive balances.
+   *
+   * @private
+   */
   private _differences(balances: Balance[]): Array<number> {
     const differences: Array<number> = [];
     for (let i = 0; i < balances.length; i += 1) {
@@ -40,6 +82,21 @@ export class MovementService {
     return differences;
   }
 
+  /**
+   * Checks for multiple occurrences of movements with the same ID.
+   *
+   * This method checks for multiple occurrences of movements with the same ID
+   * in the provided list.
+   * It identifies duplicates based on the movement ID, and if these duplicate movements
+   * are the exact same object, generates a `MOVEMENT_EXACT` error, else (only the same ID),
+   * generates a `MOVEMENT_MULTIPLE`, and adds them to the errors array.
+   *
+   * @param {Movement[]} movements - The list of movements to check for duplicates.
+   *
+   * @returns {Reason[]} An array of `Reason` representing the errors found during duplicate checking.
+   *
+   * @private
+   */
   private _checkMultiple(movements: Movement[]): Reason[] {
     const errors: Reason[] = [];
     movements.filter((movement, i) => {
@@ -56,6 +113,20 @@ export class MovementService {
     return errors;
   }
 
+  /**
+   * Checks if movements fall within the specified date range.
+   *
+   * This method checks if the date of each movement falls within the specified
+   * date range. If a movement falls outside the range, it generates an error
+   * reason and adds it to the errors array.
+   *
+   * @param {Movement[]} movements - The list of movements to check against the date range.
+   * @param {Array<[Date, Date]>} dateRange - The array containing the start and end dates of the range.
+   *
+   * @returns {Reason[]} An array of `Reason` representing the movements that fall outside the date range.
+   *
+   * @private
+   */
   private _movementsRange(
     movements: Movement[],
     dateRange: Array<[Date, Date]>,
@@ -72,6 +143,20 @@ export class MovementService {
     return errors;
   }
 
+  /**
+   * Retrieves movements that fall within each specified date range.
+   *
+   * This method iterates over each date range provided and filters the movements
+   * that have dates falling within that range. It creates an array of arrays of movements
+   * falling within a specific date range.
+   *
+   * @param {Movement[]} movements - The list of `Movement` to filter based on date ranges.
+   * @param {Array<[Date, Date]>} dateRange - The array containing the start and end dates of each range.
+   *
+   * @returns {Array<Movement[]>} An array of arrays containing movements grouped by date range.
+   *
+   * @private
+   */
   private _getMovementsInRange(
     movements: Movement[],
     dateRange: Array<[Date, Date]>,
@@ -90,6 +175,23 @@ export class MovementService {
     return rMovements;
   }
 
+  /**
+   * Calculates balances and compares them with expected differences for each date range.
+   *
+   * This method calculates the total amount of movements within each date range and compares
+   * it with the expected difference calculated from the balances. If the calculated total
+   * amount does not match the expected difference, an error reason is generated indicating
+   * whether there is an excess or missing amount.
+   *
+   * @param {Array<Movement[]>} rMovements - An array of arrays containing movements grouped by date range.
+   * @param {number[]} differences - An array containing the expected differences in balances for each date range.
+   * @param {Array<[Date, Date]>} dateRange - The array containing the start and end dates of each date range.
+   *
+   * @returns {Reason[]} An array of `Reason` for each date range where the calculated balance
+   * does not match the expected difference.
+   *
+   * @private
+   */
   private _calculBalances(
     rMovements: Array<Movement[]>,
     differences: number[],
@@ -113,6 +215,14 @@ export class MovementService {
     return errors;
   }
 
+  /**
+   * Formats the given date into a string representation.
+   *
+   * @param {Date} date - The date to format.
+   *
+   * @returns {string} The formatted date string.
+   * @private
+   */
   private _formatDate(date: Date): string {
     return date.toLocaleDateString('en', {
       day: 'numeric',

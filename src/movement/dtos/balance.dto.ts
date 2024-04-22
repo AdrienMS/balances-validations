@@ -1,9 +1,15 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 import { IsDate, IsNumber } from 'class-validator';
 
-export class BalanceDto {
-  @IsDate()
-  date: Date;
+import { Balance } from '../models';
 
+export class BalanceDto implements Balance {
+  @ApiProperty()
+  @IsDate()
+  readonly date: Date;
+
+  @ApiProperty()
   @IsNumber()
-  balance: number;
+  readonly balance: number;
 }
