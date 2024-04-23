@@ -3,6 +3,8 @@
 ## What is it ?
 This project is a simple NestJS API to validate banking movements against checkpoints.
 
+You can also check the Angular front in this repos : https://github.com/AdrienMS/balances-validations-front
+
 ## Description
 The app have 2 endpoints :
 
