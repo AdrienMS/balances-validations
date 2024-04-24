@@ -47,6 +47,14 @@ describe('MovementService', () => {
         ],
         reason: 'Two movements contain the same identifier',
       },
+      {
+        detail: 'Got 0 instead of 100 for checkpoint dated April 1, 2024',
+        reason: 'Missing movements',
+      },
+      {
+        detail: 'Got 270 instead of 100 for checkpoint dated May 1, 2024',
+        reason: 'Excess movements',
+      },
     ]);
   });
 
@@ -70,6 +78,14 @@ describe('MovementService', () => {
           },
         ],
         reason: 'Two movements are identical',
+      },
+      {
+        detail: 'Got 0 instead of 100 for checkpoint dated April 1, 2024',
+        reason: 'Missing movements',
+      },
+      {
+        detail: 'Got 120 instead of 100 for checkpoint dated May 1, 2024',
+        reason: 'Excess movements',
       },
     ]);
   });

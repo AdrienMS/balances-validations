@@ -18,7 +18,6 @@ export class MovementService {
     const dateRange = this._dateRange(balances);
     const differences = this._differences(balances);
     errors.push(...this._checkMultiple(movements));
-    if (errors.length) return errors;
     errors.push(...this._movementsRange(movements, dateRange));
     const rMovements = this._getMovementsInRange(movements, dateRange);
     errors.push(...this._calculBalances(rMovements, differences, dateRange));
